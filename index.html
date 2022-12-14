@@ -1,0 +1,182 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    body{
+         background-color: #c2f0ec;
+         opacity: 1;
+    } 
+    h2.Header {
+    text-align: center;
+    color: rgb(0, 0, 0);
+  }
+  .city {
+    align-items: center;
+    background-color: rgb(245, 241, 241);
+    color: rgb(8, 6, 6);
+    border: 5px solid rgb(3, 1, 1);
+    margin: 100px;
+    padding: 100px;
+  } 
+
+        
+    </style>
+</head>
+<body>
+    <div class="city">
+
+    
+    
+        <h2 class="Header">Register Here for booking Slot</h2>
+        <h4>Please read the instructioon carefully</h4>
+        <ul>
+            <li>Please enter the all information and select your desired day.Please enter a correct SID number </li>
+            <li>Please check the number of available seats before submitting</li>
+            <li>Register only to one slot</li>
+    <div class="enterDetails"id="enterDetails">
+        <h4>Enter details</h4>
+
+        <label for="enterID">StudentID:</label>
+        <input id="enterID" type="text"> 
+
+        <label for="enterName">StudentName:</label>
+        <input id="enterName" type="text"> 
+
+        <label for="enterEmail">EmailAdress:</label>
+        <input id="enterEmail" type="text"> <br><br>
+
+        <label for="Time slots">Choose a available time slots:</label>
+        <select name="cars" id="timeSlot">
+          <option value="Saturday_10.00 am - 11.30 am" id="sat">Saturday_10.00 am - 11.30 am</option>
+          <option value="Sunday_10.00 am - 11.30 am" id="sun">Sunday_10.00 am - 11.30 am</option>
+          <option value="Thursday_10.00 am - 11.30 am" id="thurs">Thursday_10.00 am - 11.30 am</option>
+          <option value="Friday_10.00 am - 11.30 am" id="fri">Friday_10.00 am - 11.30 am</option>
+        </select>
+        <br>
+        <br>
+        <br>
+        
+
+        <button id="submit">Submit</button>
+        <button id="update">UPDATE</button>
+        <button id="remove">REMOVE</button> <br><br>
+
+    </div>
+
+    
+    
+
+    <script type="module">
+
+        //THIS IS WHERE YOU PASTE THE CODE TO CONNECT TO YOUR OWN DATABASE
+        //Copy and paste the CDN bit of code from your app that you created on Firebase.
+        //The script tag above is already there, so careful not to have duplicate script tags.
+        //After you've copied and pasted, just delete the unnecessary script tags. 
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAmwMgX_PAsS2JTZb81ieXjUI7LcXQ2RIE",
+    authDomain: "seat-booking-7097a.firebaseapp.com",
+    databaseURL: "https://seat-booking-7097a-default-rtdb.firebaseio.com",
+    projectId: "seat-booking-7097a",
+    storageBucket: "seat-booking-7097a.appspot.com",
+    messagingSenderId: "766116533698",
+    appId: "1:766116533698:web:6631a050a96a92ccdab25b"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+   
+
+        import {getDatabase, ref, get, set, child, update, remove}
+        from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+        
+
+        const db = getDatabase();
+
+        var enterID = document.querySelector("#enterID");
+        var enterName = document.querySelector("#enterName");
+        var enterEmail = document.querySelector("#enterEmail");
+        var timeSlot=document.querySelector("#timeSlot");
+        var findID = document.querySelector("#findID");
+        var findName = document.querySelector("#findName");
+        var findAge = document.querySelector("#findAge");
+      
+
+        var insertBtn = document.querySelector("#submit");
+        var updateBtn = document.querySelector("#update");
+        var removeBtn = document.querySelector("#remove");
+        var findBtn = document.querySelector("#find");
+
+        function InsertData() {
+            set(ref(db, "People/"+ enterID.value),{
+                Name: enterName.value,
+                ID: enterID.value,
+                Email: enterEmail.value,
+                timeSlot:timeSlot.value,
+                
+
+            })
+            .then(()=>{
+                alert("Data added successfully");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+        }
+
+        function FindData() {
+            const dbref = ref(db);
+
+            get(child(dbref, "People/" + findID.value))
+            .then((snapshot)=>{
+                if(snapshot.exists()){
+                    findName.innerHTML = "Name: " + snapshot.val().Name;
+                    findAge.innerHTML = "Age: " + snapshot.val().Age;
+                } else {
+                    alert("No data found");
+                }
+            })
+            .catch((error)=>{
+                alert(error)
+            })
+            
+        }
+
+        function UpdateData(){
+            update(ref(db, "People/"+ enterID.value),{
+                Name: enterName.value,
+                Age: enterAge.value
+            })
+            .then(()=>{
+                alert("Data updated successfully");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+        }
+
+        function RemoveData(){
+            remove(ref(db, "People/"+ enterID.value))
+            .then(()=>{
+                alert("Data deleted successfully");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+        }
+
+        insertBtn.addEventListener('click', InsertData);
+        updateBtn.addEventListener('click', UpdateData);
+        removeBtn.addEventListener('click', RemoveData);
+        findBtn.addEventListener('click', FindData);
+
+      </script>
+</body>
+</html>
